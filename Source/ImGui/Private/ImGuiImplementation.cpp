@@ -32,7 +32,7 @@ ImGuiContext** GImGuiContextPtrHandle = &GImGuiContextPtr;
 #include "imgui_demo.cpp"
 #include "imgui_draw.cpp"
 #include "imgui_widgets.cpp"
-#include "misc/stl/imgui_stl.cpp"
+#include "misc/cpp/imgui_stdlib.cpp"
 
 #if PLATFORM_WINDOWS
 #include <Windows/HideWindowsPlatformTypes.h>

@@ -203,7 +203,7 @@ private:
 	FMouseButtonsIndexRange MouseButtonsUpdateRange;
 
 	FCharactersBuffer InputCharacters;
-	uint32 InputCharactersNum = 0;
+	int32 InputCharactersNum = 0;
 
 	FKeysArray KeysDown;
 	FKeysIndexRange KeysUpdateRange;

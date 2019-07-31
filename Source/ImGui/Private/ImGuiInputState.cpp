@@ -51,7 +51,7 @@ FImGuiInputState::FImGuiInputState()
 
 void FImGuiInputState::AddCharacter(TCHAR Char)
 {
-	if (InputCharactersNum < Utilities::GetArraySize(InputCharacters))
+	if (InputCharactersNum < InputCharacters.size())
 	{
 		InputCharacters[InputCharactersNum++] = CastInputChar(Char);
 		InputCharacters[InputCharactersNum] = 0;
@@ -97,8 +97,8 @@ void FImGuiInputState::ClearUpdateState()
 
 void FImGuiInputState::ClearCharacters()
 {
-	using std::fill;
-	fill(InputCharacters, &InputCharacters[Utilities::GetArraySize(InputCharacters)], 0);
+    while(!InputCharacters.empty())
+        InputCharacters.pop_back();
 	InputCharactersNum = 0;
 }
 

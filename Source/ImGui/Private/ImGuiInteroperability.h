@@ -24,7 +24,7 @@ namespace ImGuiInterops
 		using FKeysArray = decltype(ImGuiIO::KeysDown);
 		using FNavInputArray = decltype(ImGuiIO::NavInputs);
 
-		using FInputCharactersBuffer = decltype(ImGuiIO::InputCharacters);
+		using FInputCharactersBuffer = decltype(ImGuiIO::InputQueueCharacters);
 
 		using FKeyMap = decltype(ImGuiIO::KeyMap);
 	}

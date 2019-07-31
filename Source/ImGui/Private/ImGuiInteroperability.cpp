@@ -276,7 +276,7 @@ namespace ImGuiInterops
 
 		if (InputState.GetCharactersNum() > 0)
 		{
-			Copy(InputState.GetCharacters(), IO.InputCharacters);
+			Copy(InputState.GetCharacters(), IO.InputQueueCharacters);
 		}
 
 		if (InputState.IsGamepadNavigationEnabled() && InputState.HasGamepad())
