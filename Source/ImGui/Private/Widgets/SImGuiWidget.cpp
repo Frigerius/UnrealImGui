@@ -422,11 +422,11 @@ void SImGuiWidget::UpdateInputState()
 		{
 			// If mouse is in transparent input mode and focus is lost to viewport, let viewport keep it and disable
 			// the whole input to match that state.
-			if (GameViewport->GetGameViewportWidget()->HasMouseCapture())
-			{
-				Properties.SetInputEnabled(false);
-				UpdateInputState();
-			}
+			//if (GameViewport->GetGameViewportWidget()->HasMouseCapture())
+			//{
+			//	Properties.SetInputEnabled(false);
+			//	UpdateInputState();
+			//}
 		}
 		else
 		{
