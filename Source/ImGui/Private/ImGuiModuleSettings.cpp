@@ -98,9 +98,6 @@ void FImGuiModuleSettings::UpdateSettings()
 	if (UImGuiSettings* SettingsObject = UImGuiSettings::Get())
 	{
 		SetImGuiInputHandlerClass(SettingsObject->ImGuiInputHandlerClass);
-		SetShareKeyboardInput(SettingsObject->bShareKeyboardInput);
-		SetShareGamepadInput(SettingsObject->bShareGamepadInput);
-		SetShareMouseInput(SettingsObject->bShareMouseInput);
 		SetUseSoftwareCursor(SettingsObject->bUseSoftwareCursor);
 		SetToggleInputKey(SettingsObject->ToggleInput);
 	}
@@ -112,33 +109,6 @@ void FImGuiModuleSettings::SetImGuiInputHandlerClass(const FStringClassReference
 	{
 		ImGuiInputHandlerClass = ClassReference;
 		OnImGuiInputHandlerClassChanged.Broadcast(ClassReference);
-	}
-}
-
-void FImGuiModuleSettings::SetShareKeyboardInput(bool bShare)
-{
-	if (bShareKeyboardInput != bShare)
-	{
-		bShareKeyboardInput = bShare;
-		Properties.SetKeyboardInputShared(bShare);
-	}
-}
-
-void FImGuiModuleSettings::SetShareGamepadInput(bool bShare)
-{
-	if (bShareGamepadInput != bShare)
-	{
-		bShareGamepadInput = bShare;
-		Properties.SetGamepadInputShared(bShare);
-	}
-}
-
-void FImGuiModuleSettings::SetShareMouseInput(bool bShare)
-{
-	if (bShareMouseInput != bShare)
-	{
-		bShareMouseInput = bShare;
-		Properties.SetMouseInputShared(bShare);
 	}
 }
 

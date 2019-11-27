@@ -377,8 +377,7 @@ void SImGuiWidget::UpdateInputState()
 	auto& Properties = ModuleManager->GetProperties();
 	auto* ContextPropxy = ModuleManager->GetContextManager().GetContextProxy(ContextIndex);
 
-	const bool bEnableTransparentMouseInput = Properties.IsMouseInputShared()
-		&& !(ContextPropxy->IsMouseHoveringAnyWindow() || ContextPropxy->HasActiveItem());
+	const bool bEnableTransparentMouseInput = !(ContextPropxy->IsMouseHoveringAnyWindow() || ContextPropxy->HasActiveItem());
 	if (bTransparentMouseInput != bEnableTransparentMouseInput)
 	{
 		bTransparentMouseInput = bEnableTransparentMouseInput;

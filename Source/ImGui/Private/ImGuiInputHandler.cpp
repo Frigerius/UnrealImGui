@@ -32,21 +32,19 @@ namespace
 FReply UImGuiInputHandler::OnKeyChar(const struct FCharacterEvent& CharacterEvent)
 {
 	InputState->AddCharacter(CharacterEvent.GetCharacter());
-	return ToReply(!ModuleManager->GetProperties().IsKeyboardInputShared());
+	return FReply::Unhandled();
 }
 
 FReply UImGuiInputHandler::OnKeyDown(const FKeyEvent& KeyEvent)
 {
 	if (KeyEvent.GetKey().IsGamepadKey())
 	{
-		bool bConsume = false;
 		if (InputState->IsGamepadNavigationEnabled())
 		{
 			InputState->SetGamepadNavigationKey(KeyEvent, true);
-			bConsume = !ModuleManager->GetProperties().IsGamepadInputShared();
 		}
 
-		return ToReply(bConsume);
+		return FReply::Unhandled();
 	}
 	else
 	{
@@ -65,18 +63,10 @@ FReply UImGuiInputHandler::OnKeyDown(const FKeyEvent& KeyEvent)
 		}
 #endif // WITH_EDITOR
 
-		const bool bConsume = !ModuleManager->GetProperties().IsKeyboardInputShared();
-
-		// With shared input we can leave command bindings for DebugExec to handle, otherwise we need to do it here.
-		if (bConsume && IsToggleInputEvent(KeyEvent))
-		{
-			ModuleManager->GetProperties().ToggleInput();
-		}
-
 		InputState->SetKeyDown(KeyEvent, true);
 		CopyModifierKeys(KeyEvent);
 
-		return ToReply(bConsume);
+		return FReply::Unhandled();
 	}
 }
 
@@ -84,35 +74,30 @@ FReply UImGuiInputHandler::OnKeyUp(const FKeyEvent& KeyEvent)
 {
 	if (KeyEvent.GetKey().IsGamepadKey())
 	{
-		bool bConsume = false;
 		if (InputState->IsGamepadNavigationEnabled())
 		{
 			InputState->SetGamepadNavigationKey(KeyEvent, false);
-			bConsume = !ModuleManager->GetProperties().IsGamepadInputShared();
 		}
 
-		return ToReply(bConsume);
+		return FReply::Unhandled();
 	}
 	else
 	{
 		InputState->SetKeyDown(KeyEvent, false);
 		CopyModifierKeys(KeyEvent);
 
-		return ToReply(!ModuleManager->GetProperties().IsKeyboardInputShared());
+		return FReply::Unhandled();
 	}
 }
 
 FReply UImGuiInputHandler::OnAnalogValueChanged(const FAnalogInputEvent& AnalogInputEvent)
 {
-	bool bConsume = false;
-
 	if (AnalogInputEvent.GetKey().IsGamepadKey() && InputState->IsGamepadNavigationEnabled())
 	{
 		InputState->SetGamepadNavigationAxis(AnalogInputEvent, AnalogInputEvent.GetAnalogValue());
-		bConsume = !ModuleManager->GetProperties().IsGamepadInputShared();
 	}
 
-	return ToReply(bConsume);
+	return FReply::Unhandled();
 }
 
 FReply UImGuiInputHandler::OnMouseButtonDown(const FPointerEvent& MouseEvent)

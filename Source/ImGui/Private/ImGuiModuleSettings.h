@@ -71,24 +71,6 @@ protected:
 	UPROPERTY(EditAnywhere, config, Category = "Extensions", meta = (MetaClass = "ImGuiInputHandler"))
 	FStringClassReference ImGuiInputHandlerClass;
 
-	// Whether ImGui should share keyboard input with game.
-	// This defines initial behaviour which can be later changed using 'ImGui.ToggleKeyboardInputSharing' command or
-	// module properties interface.
-	UPROPERTY(EditAnywhere, config, Category = "Input")
-	bool bShareKeyboardInput = false;
-
-	// Whether ImGui should share gamepad input with game.
-	// This defines initial behaviour which can be later changed using 'ImGui.ToggleGamepadInputSharing' command or
-	// module properties interface.
-	UPROPERTY(EditAnywhere, config, Category = "Input")
-	bool bShareGamepadInput = false;
-
-	// Whether ImGui should share mouse input with game.
-	// This defines initial behaviour which can be later changed using 'ImGui.ToggleMouseInputSharing' command or
-	// module properties interface.
-	UPROPERTY(EditAnywhere, config, Category = "Input")
-	bool bShareMouseInput = false;
-
 	// If true, then in input mode ImGui will draw its own cursor in place of the hardware one.
 	// When disabled (default) there is a noticeable difference between cursor position seen by ImGui and position on
 	// the screen. Enabling this option removes that effect but with lower frame-rates UI becomes quickly unusable.
@@ -159,9 +141,6 @@ private:
 	void UpdateSettings();
 
 	void SetImGuiInputHandlerClass(const FStringClassReference& ClassReference);
-	void SetShareKeyboardInput(bool bShare);
-	void SetShareGamepadInput(bool bShare);
-	void SetShareMouseInput(bool bShare);
 	void SetUseSoftwareCursor(bool bUse);
 	void SetToggleInputKey(const FImGuiKeyInfo& KeyInfo);
 

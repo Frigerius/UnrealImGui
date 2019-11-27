@@ -16,9 +16,6 @@ public:
 	static const TCHAR* const ToggleInput;
 	static const TCHAR* const ToggleKeyboardNavigation;
 	static const TCHAR* const ToggleGamepadNavigation;
-	static const TCHAR* const ToggleKeyboardInputSharing;
-	static const TCHAR* const ToggleGamepadInputSharing;
-	static const TCHAR* const ToggleMouseInputSharing;
 	static const TCHAR* const ToggleDemo;
 
 	FImGuiModuleCommands(FImGuiModuleProperties& InProperties);
@@ -30,9 +27,6 @@ private:
 	void ToggleInputImpl();
 	void ToggleKeyboardNavigationImpl();
 	void ToggleGamepadNavigationImpl();
-	void ToggleKeyboardInputSharingImpl();
-	void ToggleGamepadInputSharingImpl();
-	void ToggleMouseInputSharingImpl();
 	void ToggleDemoImpl();
 
 	FImGuiModuleProperties& Properties;
@@ -40,8 +34,5 @@ private:
 	FAutoConsoleCommand ToggleInputCommand;
 	FAutoConsoleCommand ToggleKeyboardNavigationCommand;
 	FAutoConsoleCommand ToggleGamepadNavigationCommand;
-	FAutoConsoleCommand ToggleKeyboardInputSharingCommand;
-	FAutoConsoleCommand ToggleGamepadInputSharingCommand;
-	FAutoConsoleCommand ToggleMouseInputSharingCommand;
 	FAutoConsoleCommand ToggleDemoCommand;
 };
