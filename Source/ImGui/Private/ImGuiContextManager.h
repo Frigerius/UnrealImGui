@@ -98,7 +98,7 @@ private:
 
 #endif // WITH_EDITOR
 
-	void OnWorldTickStart(ELevelTick TickType, float DeltaSeconds);
+	void OnWorldTickStart(UWorld* World, ELevelTick TickType, float DeltaSeconds);
 
 #if ENGINE_COMPATIBILITY_WITH_WORLD_POST_ACTOR_TICK
 	void OnWorldPostActorTick(UWorld* World, ELevelTick TickType, float DeltaSeconds);

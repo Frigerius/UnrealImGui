@@ -98,11 +98,11 @@ void FImGuiContextManager::Tick(float DeltaSeconds)
 	}
 }
 
-void FImGuiContextManager::OnWorldTickStart(ELevelTick TickType, float DeltaSeconds)
+void FImGuiContextManager::OnWorldTickStart(UWorld* World, ELevelTick TickType, float DeltaSeconds)
 {
-	if (GWorld)
+	if (World)
 	{
-		FImGuiContextProxy& ContextProxy = GetWorldContextProxy(*GWorld);
+		FImGuiContextProxy& ContextProxy = GetWorldContextProxy(*World);
 
 		// Set as current, so we have right context ready when updating world objects.
 		ContextProxy.SetAsCurrent();
