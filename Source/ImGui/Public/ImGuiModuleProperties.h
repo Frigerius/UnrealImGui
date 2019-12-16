@@ -45,8 +45,7 @@ public:
 	void ToggleDemo() { SetShowDemo(!ShowDemo()); }
 
 private:
-
-	bool bInputEnabled = true;
+    bool bInputEnabled = WITH_EDITOR ? true : false;
 
 	bool bKeyboardNavigationEnabled = false;
 	bool bGamepadNavigationEnabled = false;
