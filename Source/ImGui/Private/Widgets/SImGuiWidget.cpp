@@ -427,7 +427,7 @@ void SImGuiWidget::UpdateInputState()
 	auto& Properties = ModuleManager->GetProperties();
 	auto* ContextProxy = ModuleManager->GetContextManager().GetContextProxy(ContextIndex);
 
-	const bool bEnableTransparentMouseInput = Properties.IsMouseInputShared()
+	const bool bEnableTransparentMouseInput = true
 #if PLATFORM_ANDROID || PLATFORM_IOS
 		&& (FSlateApplication::Get().GetCursorPos() != FVector2D::ZeroVector)
 #endif
@@ -475,11 +475,11 @@ void SImGuiWidget::UpdateInputState()
 		{
 			// If mouse is in transparent input mode and focus is lost to viewport, let viewport keep it and disable
 			// the whole input to match that state.
-			if (GameViewport->GetGameViewportWidget()->HasMouseCapture())
-			{
-				Properties.SetInputEnabled(false);
-				UpdateInputState();
-			}
+			// if (GameViewport->GetGameViewportWidget()->HasMouseCapture())
+			// {
+			// 	Properties.SetInputEnabled(false);
+			// 	UpdateInputState();
+			// }
 		}
 		else
 		{
