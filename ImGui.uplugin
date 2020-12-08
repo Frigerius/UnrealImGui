@@ -17,7 +17,10 @@
 		{
 			"Name": "ImGui",
 			"Type": "DeveloperTool",
-			"LoadingPhase": "PreDefault"
+			"LoadingPhase": "PreDefault",
+			"BlacklistTargets": [
+				"Server"
+			]
 		}
 	]
 }
