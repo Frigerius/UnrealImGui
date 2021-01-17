@@ -57,5 +57,7 @@ void FImGuiDrawList::TransferDrawData(ImDrawList& Src)
 	Src.IdxBuffer.swap(ImGuiIndexBuffer);
 	Src.VtxBuffer.swap(ImGuiVertexBuffer);
 
-    Src._ResetForNewFrame();
+	// ImGui seems to clear draw lists in every frame, but since source list can contain pointers to buffers that
+	// we just swapped, it is better to clear explicitly here.
+	Src._ResetForNewFrame();
 }

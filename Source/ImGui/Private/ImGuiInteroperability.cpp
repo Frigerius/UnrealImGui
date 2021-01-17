@@ -122,17 +122,6 @@ namespace ImGuiInterops
 		Copy(Mapping.KeyMap, IO.KeyMap);
 	}
 
-	// Simple transform mapping key codes to 0-511 range used in ImGui.
-	// From what I can tell, on most supported platforms key codes should comfortably fit in that range anyway
-	// but the SDL key-codes used on Linux can go way out of this range (because of the extra flag). However,
-	// after this transform they should fit in the range without conflicts.
-	// NOTE: Should any of the platforms have other conflicts or any trouble with inputs, this is the likely
-	// candidate for change.
-	static uint32 MapKeyCode(uint32 KeyCode)
-	{
-		return (KeyCode < 512) ? KeyCode : 256 + (KeyCode % 256);
-	}
-
 	uint32 GetKeyIndex(const FKey& Key)
 	{
 		const uint32* pKeyCode = nullptr;
@@ -140,17 +129,17 @@ namespace ImGuiInterops
 
 		FInputKeyManager::Get().GetCodesFromKey(Key, pKeyCode, pCharCode);
 
-		const uint32 KeyCode =
-			pKeyCode ? *pKeyCode
-			: pCharCode ? *pCharCode
-			: 0;
+		if (pKeyCode)
+		{
+			return *pKeyCode;
+		}
 
-		return MapKeyCode(KeyCode);
-	}
+		if (pCharCode)
+		{
+			return *pCharCode;
+		}
 
-	uint32 GetKeyIndex(const FKeyEvent& KeyEvent)
-	{
-		return MapKeyCode(KeyEvent.GetKeyCode());
+		return 0;
 	}
 
 	uint32 GetMouseIndex(const FKey& MouseButton)
