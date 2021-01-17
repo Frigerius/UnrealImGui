@@ -57,7 +57,5 @@ void FImGuiDrawList::TransferDrawData(ImDrawList& Src)
 	Src.IdxBuffer.swap(ImGuiIndexBuffer);
 	Src.VtxBuffer.swap(ImGuiVertexBuffer);
 
-    Src.CmdBuffer.resize(0);
-    Src.IdxBuffer.resize(0);
-    Src.VtxBuffer.resize(0);
+    Src._ResetForNewFrame();
 }
