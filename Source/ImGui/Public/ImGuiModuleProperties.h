@@ -35,15 +35,6 @@ public:
 	/** Toggle gamepad navigation. */
 	void ToggleGamepadNavigation() { SetGamepadNavigationEnabled(!IsGamepadNavigationEnabled()); }
 
-	/** Check whether keyboard input is shared with game. */
-	bool IsKeyboardInputShared() const { return bKeyboardInputShared; }
-
-	/** Set whether keyboard input should be shared with game. */
-	void SetKeyboardInputShared(bool bShared) { bKeyboardInputShared = bShared; }
-
-	/** Toggle whether keyboard input should be shared with game. */
-	void ToggleKeyboardInputSharing() { SetKeyboardInputShared(!IsKeyboardInputShared()); }
-
 	/** Check whether gamepad input is shared with game. */
 	bool IsGamepadInputShared() const { return bGamepadInputShared; }
 
@@ -75,7 +66,6 @@ private:
 	bool bKeyboardNavigationEnabled = false;
 	bool bGamepadNavigationEnabled = false;
 
-	bool bKeyboardInputShared = false;
 	bool bGamepadInputShared = false;
 
 	bool bShowDemo = false;

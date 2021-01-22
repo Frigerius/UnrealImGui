@@ -6,9 +6,9 @@
 #include "ImGuiInputState.h"
 #include "Utilities/WorldContextIndex.h"
 
-#include <GenericPlatform/ICursor.h>
+#include "GenericPlatform/ICursor.h"
 
-#include <imgui.h>
+#include "imgui.h"
 #include <string>
 
 
@@ -64,6 +64,8 @@ public:
 	// Whether ImGui will use the mouse inputs (read once per frame during context update).
 	bool WantsMouseCapture() const { return bWantsMouseCapture; }
 
+	bool WantsCaptureKeyboard() const {return bWantCaptureKeyboard;}
+
 	// Cursor type desired by this context (updated once per frame during context update).
 	EMouseCursor::Type GetMouseCursor() const { return MouseCursor;  }
 
@@ -101,6 +103,7 @@ private:
 	EMouseCursor::Type MouseCursor = EMouseCursor::None;
 	bool bHasActiveItem = false;
 	bool bWantsMouseCapture = false;
+	bool bWantCaptureKeyboard = false;
 
 	bool bIsFrameStarted = false;
 	bool bIsDrawEarlyDebugCalled = false;

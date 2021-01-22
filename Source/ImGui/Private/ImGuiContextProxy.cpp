@@ -3,14 +3,12 @@
 #include "ImGuiContextProxy.h"
 
 #include "ImGuiDelegatesContainer.h"
-#include "ThirdPartyBuildImGui.h"
 #include "ThirdPartyBuildNetImgui.h"
 #include "ImGuiInteroperability.h"
-#include "Utilities/Arrays.h"
 #include "VersionCompatibility.h"
 
-#include <GenericPlatform/GenericPlatformFile.h>
-#include <Misc/Paths.h>
+#include "GenericPlatform/GenericPlatformFile.h"
+#include "Misc/Paths.h"
 
 
 static constexpr float DEFAULT_CANVAS_WIDTH = 3840.f;
@@ -190,9 +188,9 @@ void FImGuiContextProxy::DrawDebug()
 void FImGuiContextProxy::Tick(float DeltaSeconds)
 {
 	// Making sure that we tick only once per frame.
-	if (LastFrameNumber < GFrameNumber)
+	if (LastFrameNumber < GFrameCounter)
 	{
-		LastFrameNumber = GFrameNumber;
+		LastFrameNumber = GFrameCounter;
 
 		SetAsCurrent();
 
@@ -216,6 +214,7 @@ void FImGuiContextProxy::Tick(float DeltaSeconds)
 
 		// Update remaining context information.
 		bWantsMouseCapture = ImGui::GetIO().WantCaptureMouse;
+	    bWantCaptureKeyboard = ImGui::GetIO().WantCaptureKeyboard;
 	}
 }
 

@@ -24,13 +24,9 @@ FImGuiModuleCommands::FImGuiModuleCommands(FImGuiModuleProperties& InProperties)
 	, ToggleGamepadNavigationCommand(ToggleGamepadNavigation,
 		TEXT("Toggle ImGui gamepad navigation."),
 		FConsoleCommandDelegate::CreateRaw(this, &FImGuiModuleCommands::ToggleGamepadNavigationImpl))
-	, ToggleKeyboardInputSharingCommand(ToggleKeyboardInputSharing,
-		TEXT("Toggle ImGui keyboard input sharing."),
-		FConsoleCommandDelegate::CreateRaw(this, &FImGuiModuleCommands::ToggleKeyboardInputSharingImpl))
 	, ToggleGamepadInputSharingCommand(ToggleGamepadInputSharing,
 		TEXT("Toggle ImGui gamepad input sharing."),
 		FConsoleCommandDelegate::CreateRaw(this, &FImGuiModuleCommands::ToggleGamepadInputSharingImpl))
-
 	, ToggleDemoCommand(ToggleDemo,
 		TEXT("Toggle ImGui demo."),
 		FConsoleCommandDelegate::CreateRaw(this, &FImGuiModuleCommands::ToggleDemoImpl))
@@ -55,11 +51,6 @@ void FImGuiModuleCommands::ToggleKeyboardNavigationImpl()
 void FImGuiModuleCommands::ToggleGamepadNavigationImpl()
 {
 	Properties.ToggleGamepadNavigation();
-}
-
-void FImGuiModuleCommands::ToggleKeyboardInputSharingImpl()
-{
-	Properties.ToggleKeyboardInputSharing();
 }
 
 void FImGuiModuleCommands::ToggleGamepadInputSharingImpl()

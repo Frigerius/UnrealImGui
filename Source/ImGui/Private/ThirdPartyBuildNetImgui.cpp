@@ -9,9 +9,9 @@
 
 enum : int { kDualUI_None, kDualUI_Mirror, kDualDisplay_On };
 
-static int					sRemoteContextIndex		= 0;			// Which proxy context is currently associated with netImgui
-static int					sDualUIType				= kDualUI_None;	// How to handle the local ImGui display when connected remotely
-static FImGuiContextProxy*	spActiveContextProxy	= nullptr;
+static int sRemoteContextIndex = 0;    // Which proxy context is currently associated with netImgui
+static int sDualUIType = kDualUI_None; // How to handle the local ImGui display when connected remotely
+static FImGuiContextProxy* spActiveContextProxy = nullptr;
 
 //=================================================================================================
 // If not already done, start listening for netImgui server to connect to us
@@ -24,13 +24,29 @@ void NetImguiPreUpdate_Connection()
 	// Could also support reaching server directly if we had a provided IP
 	if (ImGui::GetCurrentContext() && !NetImgui::IsConnected() && !NetImgui::IsConnectionPending())
 	{
-		FString sessionName = FString::Format(TEXT("{0}-{1}"), { FApp::GetProjectName(), FPlatformProcess::ComputerName() });
+		FString SessionName = FString::Format(TEXT("[{0}]{1}-{2}"), { IsRunningDedicatedServer() ? TEXT("Server") : TEXT("Client"), FApp::GetProjectName(),
+																	  FPlatformProcess::ComputerName() });
+
+		if (IsRunningDedicatedServer())
+		{
+			constexpr uint32 DefaultServerPort = 8892;
+			uint32 Port = DefaultServerPort;
 		
-		// Setup connection to wait for netImgui server to reach us
-		NetImgui::ConnectFromApp(TCHAR_TO_ANSI(sessionName.GetCharArray().GetData()), FApp::IsGame() ? NETIMGUI_LISTENPORT_GAME : NETIMGUI_LISTENPORT_EDITOR, true);
+			if(!FParse::Value(FCommandLine::Get(), TEXT("netImGuiPort"), Port))
+			{
+				Port = DefaultServerPort;
+			}
+			NetImgui::ConnectFromApp(TCHAR_TO_ANSI(SessionName.GetCharArray().GetData()), Port, true);
+		}
+		else
+		{
+			// Setup connection to wait for netImgui server to reach us
+			uint32 Port = FApp::IsGame() ? NETIMGUI_LISTENPORT_GAME : NETIMGUI_LISTENPORT_EDITOR;
+			NetImgui::ConnectFromApp(TCHAR_TO_ANSI(SessionName.GetCharArray().GetData()), Port, true);
+		}
 
 		// Setup connection to try reaching netImgui server directly
-		//NetImgui::ConnectToApp(TCHAR_TO_ANSI(sessionName.GetCharArray().GetData()), "localhost", NetImgui::kDefaultServerPort, true);
+		// NetImgui::ConnectToApp(TCHAR_TO_ANSI(SessionName.GetCharArray().GetData()), "localhost", NetImgui::kDefaultServerPort, true);
 	}
 }
 
@@ -40,13 +56,13 @@ void NetImguiPreUpdate_Connection()
 void NetImguiPreUpdate_FindActiveContext(TMap<int32, FContextData>& Contexts)
 {
 	spActiveContextProxy = nullptr;
-	if( NetImgui::IsConnected() )
+	if (NetImgui::IsConnected())
 	{
 		for (auto& Pair : Contexts)
 		{
 			auto& ContextData = Pair.Value;
 			bool bIsRemote = NetImgui::IsConnected() && ContextData.CanTick() && static_cast<int>(Pair.Key) == sRemoteContextIndex;
-			if( bIsRemote )
+			if (bIsRemote)
 			{
 				spActiveContextProxy = ContextData.ContextProxy.Get();
 			}
@@ -81,7 +97,7 @@ void NetImguiPreUpdate_NextFrame()
 					pDrawData->CmdListsCount = 0;
 				}
 			}
-			// Clear the local display
+				// Clear the local display
 			else if (sDualUIType == kDualUI_None)
 			{
 				spActiveContextProxy->UpdateDrawData(nullptr);
@@ -90,7 +106,6 @@ void NetImguiPreUpdate_NextFrame()
 			// NetImgui::NewFrame update delta time of original context (to match netImgui)
 			// make sure it updates the right one
 			spActiveContextProxy->SetAsCurrent();
-
 		}
 		// It is possible to avoid drawing ImGui when connected and server doesn't expect a new frame,
 		// but requires to skip calling drawing delegates and user not to draw in UObject::Tick. 
@@ -103,15 +118,16 @@ void NetImguiPreUpdate_NextFrame()
 // Add a main menu bar with a list of Context to choose from.
 //=================================================================================================
 void NetImguiPreUpdate_DrawNetImguiContent(TMap<int32, FContextData>& Contexts)
-{	
-	if ( ImGui::BeginMainMenuBar() )
+{
+	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("netImgui"))
 		{
 			for (auto& Pair : Contexts)
 			{
 				auto& context = Pair.Value;
-				FString name = FString::Format(TEXT("({0}) {1} {2}"), { static_cast<int>(Pair.Key), context.ContextProxy->GetName(), context.CanTick() ? TEXT("") : TEXT("(Inactive)") });
+				FString name = FString::Format(TEXT("({0}) {1} {2}"), { static_cast<int>(Pair.Key), context.ContextProxy->GetName(),
+																		context.CanTick() ? TEXT("") : TEXT("(Inactive)") });
 				ImGui::RadioButton(TCHAR_TO_ANSI(name.GetCharArray().GetData()), &sRemoteContextIndex, static_cast<int>(Pair.Key));
 			}
 
@@ -123,7 +139,7 @@ void NetImguiPreUpdate_DrawNetImguiContent(TMap<int32, FContextData>& Contexts)
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
-	}	
+	}
 }
 
 #endif // NETIMGUI_ENABLED
@@ -166,7 +182,7 @@ bool NetImGuiCanDrawProxy(const FImGuiContextProxy* pProxyContext)
 bool NetImGuiSetupDrawRemote(const class FImGuiContextProxy* pProxyContext)
 {
 #if NETIMGUI_ENABLED
-	if( pProxyContext == spActiveContextProxy && NetImgui::IsConnected() && NetImgui::GetDrawingContext() )
+	if (pProxyContext == spActiveContextProxy && NetImgui::IsConnected() && NetImgui::GetDrawingContext())
 	{
 		ImGui::SetCurrentContext(NetImgui::GetDrawingContext());
 		return true;

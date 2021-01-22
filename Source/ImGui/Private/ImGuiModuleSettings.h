@@ -4,18 +4,18 @@
 
 #include "VersionCompatibility.h"
 
-#include <Curves/CurveFloat.h>
-#include <Delegates/Delegate.h>
-#include <InputCoreTypes.h>
-#include <Styling/SlateTypes.h>
-#include <UObject/Object.h>
+#include "Curves/CurveFloat.h"
+#include "Delegates/Delegate.h"
+#include "InputCoreTypes.h"
+#include "Styling/SlateTypes.h"
+#include "UObject/Object.h"
 
 // We use FStringClassReference, which is supported by older and newer engine versions. Starting from 4.18, it is
 // a typedef of FSoftClassPath, which is also recognized by UHT.
 #if ENGINE_COMPATIBILITY_LEGACY_STRING_CLASS_REF
-#include <StringClassReference.h>
+#include "StringClassReference.h"
 #else
-#include <UObject/SoftObjectPath.h>
+#include "UObject/SoftObjectPath.h"
 #endif
 
 #include "ImGuiModuleSettings.generated.h"
@@ -280,7 +280,6 @@ private:
 	void UpdateDPIScaleInfo();
 
 	void SetImGuiInputHandlerClass(const FStringClassReference& ClassReference);
-	void SetShareKeyboardInput(bool bShare);
 	void SetShareGamepadInput(bool bShare);
 	void SetUseSoftwareCursor(bool bUse);
 	void SetToggleInputKey(const FImGuiKeyInfo& KeyInfo);
@@ -298,7 +297,6 @@ private:
 	FImGuiKeyInfo ToggleInputKey;
 	FImGuiCanvasSizeInfo CanvasSize;
 	FImGuiDPIScaleInfo DPIScale;
-	bool bShareKeyboardInput = false;
 	bool bShareGamepadInput = false;
 	bool bShareMouseInput = false;
 	bool bUseSoftwareCursor = false;

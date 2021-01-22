@@ -9,7 +9,6 @@
 #include "ImGuiModuleSettings.h"
 #include "VersionCompatibility.h"
 
-#include <Engine/Console.h>
 #include <Framework/Application/SlateApplication.h>
 #include <GameFramework/InputSettings.h>
 #include <InputCoreTypes.h>
@@ -35,7 +34,7 @@ namespace
 FReply UImGuiInputHandler::OnKeyChar(const struct FCharacterEvent& CharacterEvent)
 {
 	InputState->AddCharacter(CharacterEvent.GetCharacter());
-	return ToReply(!ModuleManager->GetProperties().IsKeyboardInputShared());
+	return ToReply(WantsCaptureKeyboard());
 }
 
 FReply UImGuiInputHandler::OnKeyDown(const FKeyEvent& KeyEvent)
@@ -68,7 +67,7 @@ FReply UImGuiInputHandler::OnKeyDown(const FKeyEvent& KeyEvent)
 		}
 #endif // WITH_EDITOR
 
-		const bool bConsume = !ModuleManager->GetProperties().IsKeyboardInputShared();
+		const bool bConsume = WantsCaptureKeyboard();
 
 		// With shared input we can leave command bindings for DebugExec to handle, otherwise we need to do it here.
 		if (bConsume && IsToggleInputEvent(KeyEvent))
@@ -101,7 +100,7 @@ FReply UImGuiInputHandler::OnKeyUp(const FKeyEvent& KeyEvent)
 		InputState->SetKeyDown(KeyEvent, false);
 		CopyModifierKeys(KeyEvent);
 
-		return ToReply(!ModuleManager->GetProperties().IsKeyboardInputShared());
+		return ToReply(WantsCaptureKeyboard());
 	}
 }
 
@@ -292,6 +291,12 @@ bool UImGuiInputHandler::HasImGuiActiveItem() const
 {
 	FImGuiContextProxy* ContextProxy = ModuleManager->GetContextManager().GetContextProxy(ContextIndex);
 	return ContextProxy && ContextProxy->HasActiveItem();
+}
+
+bool UImGuiInputHandler::WantsCaptureKeyboard() const
+{
+	FImGuiContextProxy* ContextProxy = ModuleManager->GetContextManager().GetContextProxy(ContextIndex);
+	return ContextProxy && ContextProxy->WantsCaptureKeyboard();
 }
 
 void UImGuiInputHandler::UpdateInputStatePointer()

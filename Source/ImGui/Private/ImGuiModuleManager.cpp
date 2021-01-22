@@ -5,11 +5,12 @@
 #include "ImGuiInteroperability.h"
 #include "Utilities/WorldContextIndex.h"
 
-#include <Framework/Application/SlateApplication.h>
-#include <Modules/ModuleManager.h>
+#include "Framework/Application/SlateApplication.h"
+#include "Modules/ModuleManager.h"
 
-#include <imgui.h>
+#include "imgui.h"
 
+#include "NetImgui_Api.h"
 
 // High enough z-order guarantees that ImGui output is rendered on top of the game UI.
 constexpr int32 IMGUI_WIDGET_Z_ORDER = 10000;
@@ -76,21 +77,36 @@ FImGuiModuleManager::~FImGuiModuleManager()
 
 void FImGuiModuleManager::LoadTextures()
 {
-	checkf(FSlateApplication::IsInitialized(), TEXT("Slate should be initialized before we can create textures."));
+	checkf(FSlateApplication::IsInitialized() || IsRunningDedicatedServer(), TEXT("Slate should be initialized before we can create textures."));
 
 	if (!bTexturesLoaded)
 	{
-		bTexturesLoaded = true;
+		if (FSlateApplication::IsInitialized())
+		{
+			bTexturesLoaded = true;
+			TextureManager.InitializeErrorTexture(FColor::Magenta);
 
-		TextureManager.InitializeErrorTexture(FColor::Magenta);
+			// Create an empty texture at index 0. We will use it for ImGui outputs with null texture id.
+			TextureManager.CreatePlainTexture(PlainTextureName, 2, 2, FColor::White);
+			// Register for atlas built events, so we can rebuild textures.
+			ContextManager.OnFontAtlasBuilt.AddRaw(this, &FImGuiModuleManager::BuildFontAtlasTexture);
 
-		// Create an empty texture at index 0. We will use it for ImGui outputs with null texture id.
-		TextureManager.CreatePlainTexture(PlainTextureName, 2, 2, FColor::White);
+			BuildFontAtlasTexture();
+		}
+		else if (IsRunningDedicatedServer())
+		{
+#if NETIMGUI_ENABLED
+			bTexturesLoaded = true;
+			ImGuiIO& Io = ImGui::GetIO();
+			Io.Fonts->AddFontDefault();
+			Io.Fonts->Build();
 
-		// Register for atlas built events, so we can rebuild textures.
-		ContextManager.OnFontAtlasBuilt.AddRaw(this, &FImGuiModuleManager::BuildFontAtlasTexture);
-
-		BuildFontAtlasTexture();
+			unsigned char* Pixels;
+			int Width, Height, Bpp;
+			Io.Fonts->GetTexDataAsAlpha8(&Pixels, &Width, &Height, &Bpp);
+			NetImgui::SendDataTexture(0, Pixels, Width, Height, NetImgui::eTexFormat::kTexFmtA8);
+#endif
+		}
 	}
 }
 
@@ -116,6 +132,10 @@ void FImGuiModuleManager::RegisterTick()
 	{
 		TickDelegateHandle = FSlateApplication::Get().OnPostTick().AddRaw(this, &FImGuiModuleManager::Tick);
 	}
+	if(!TickDelegateHandle.IsValid() && IsRunningDedicatedServer())
+	{
+		TickDelegateHandle = FCoreDelegates::OnEndFrame.AddLambda([this]() { Tick(0); });
+	}
 }
 
 void FImGuiModuleManager::UnregisterTick()
@@ -125,6 +145,10 @@ void FImGuiModuleManager::UnregisterTick()
 		if (FSlateApplication::IsInitialized())
 		{
 			FSlateApplication::Get().OnPostTick().Remove(TickDelegateHandle);
+		}
+		if( IsRunningDedicatedServer())
+		{
+			FCoreDelegates::OnEndFrame.Remove(TickDelegateHandle);
 		}
 		TickDelegateHandle.Reset();
 	}
@@ -187,7 +211,7 @@ void FImGuiModuleManager::AddWidgetToViewport(UGameViewportClient* GameViewport)
 
 	// Make sure that we have a context for this viewport's world and get its index.
 	int32 ContextIndex;
-	auto& ContextProxy = ContextManager.GetWorldContextProxy(*GameViewport->GetWorld(), ContextIndex);
+	ContextManager.GetWorldContextProxy(*GameViewport->GetWorld(), ContextIndex);
 
 	// Create and initialize the widget.
 	TSharedPtr<SImGuiLayout> SharedWidget;

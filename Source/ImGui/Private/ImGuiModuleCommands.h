@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <HAL/IConsoleManager.h>
+#include "HAL/IConsoleManager.h"
 
 
 struct FImGuiKeyInfo;
@@ -29,7 +29,6 @@ private:
 	void ToggleInputImpl();
 	void ToggleKeyboardNavigationImpl();
 	void ToggleGamepadNavigationImpl();
-	void ToggleKeyboardInputSharingImpl();
 	void ToggleGamepadInputSharingImpl();
 	void ToggleDemoImpl();
 
@@ -38,7 +37,6 @@ private:
 	FAutoConsoleCommand ToggleInputCommand;
 	FAutoConsoleCommand ToggleKeyboardNavigationCommand;
 	FAutoConsoleCommand ToggleGamepadNavigationCommand;
-	FAutoConsoleCommand ToggleKeyboardInputSharingCommand;
 	FAutoConsoleCommand ToggleGamepadInputSharingCommand;
 	FAutoConsoleCommand ToggleDemoCommand;
 #if NETIMGUI_ENABLED

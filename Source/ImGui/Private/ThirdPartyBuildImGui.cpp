@@ -1,8 +1,8 @@
 // Distributed under the MIT License (MIT) (see accompanying LICENSE file)
 
-#include "ThirdPartyBuildImgui.h"
+#include "ThirdPartyBuildImGui.h"
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 // For convenience and easy access to the ImGui source code, we build it as part of this module.
 // We don't need to define IMGUI_API manually because it is already done for this module.

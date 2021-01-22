@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <Input/Reply.h>
-#include <UObject/Object.h>
-#include <UObject/WeakObjectPtr.h>
+#include "CoreMinimal.h"
+#include "Input/Reply.h"
+#include "UObject/Object.h"
 
 #include "ImGuiInputHandler.generated.h"
 
@@ -165,6 +164,8 @@ protected:
 	 * @returns True, if corresponding context has an active item.
 	 */
 	bool HasImGuiActiveItem() const;
+
+	bool WantsCaptureKeyboard() const;
 
 private:
 

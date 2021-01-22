@@ -5,9 +5,8 @@
 #include "ImGuiModuleCommands.h"
 #include "ImGuiModuleProperties.h"
 
-#include <Engine/Engine.h>
-#include <GameFramework/GameUserSettings.h>
-#include <Misc/ConfigCacheIni.h>
+#include "Engine/Engine.h"
+#include "GameFramework/GameUserSettings.h"
 
 
 //====================================================================================================
@@ -111,7 +110,6 @@ void FImGuiModuleSettings::UpdateSettings()
 	if (UImGuiSettings* SettingsObject = UImGuiSettings::Get())
 	{
 		SetImGuiInputHandlerClass(SettingsObject->ImGuiInputHandlerClass);
-		SetShareKeyboardInput(SettingsObject->bShareKeyboardInput);
 		SetShareGamepadInput(SettingsObject->bShareGamepadInput);
 		SetUseSoftwareCursor(SettingsObject->bUseSoftwareCursor);
 		SetToggleInputKey(SettingsObject->ToggleInput);
@@ -133,15 +131,6 @@ void FImGuiModuleSettings::SetImGuiInputHandlerClass(const FStringClassReference
 	{
 		ImGuiInputHandlerClass = ClassReference;
 		OnImGuiInputHandlerClassChanged.Broadcast(ClassReference);
-	}
-}
-
-void FImGuiModuleSettings::SetShareKeyboardInput(bool bShare)
-{
-	if (bShareKeyboardInput != bShare)
-	{
-		bShareKeyboardInput = bShare;
-		Properties.SetKeyboardInputShared(bShare);
 	}
 }
 
